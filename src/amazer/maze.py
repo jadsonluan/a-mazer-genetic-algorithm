@@ -60,19 +60,6 @@ class Maze:
     for row in range(self.size):
       for col in range(self.size):
         self.cell((row, col)).label = DEFAULT_LABEL
-
-  def break_random_wall(self):
-    print("Criando uma porta 🚪 aleatoria!")
-    # valid_wall = False
-    # while not valid_wall:
-    #   position = (choice([0, self.size - 1]), choice([0, self.size - 1]))
-    #   if position == self.exit or position == self.entrance:
-    #     continue
-    
-    # element = self.cell()
-    # directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
-    # direction = choice(directions)
-    # print(element, direction)
         
   def cell(self, position):
     row, col = position
