@@ -38,7 +38,7 @@ class Maze:
     self.make_solvable(1, 2)
     
   def make_solvable(self, label_entrance, label_exit):
-    print("[🌊] Procurando solução por FloodFill!")
+    self.clear_labels()
     print("[🌊] Iniciando FloodFill (Entrada => Saida)!")
     solved = self.floodfill(self.entrance, self.exit, label_entrance)
 
@@ -47,14 +47,14 @@ class Maze:
     else:
       print("[❌] Saída não encontrada!")
       print("[🌊] Iniciando FloodFill (Saida => Entrada)!")
-      solved = self.floodfill(self.exit, self.entrance, label_exit, second_time=True)
 
-      if solved:
-        self.clear_labels()
-        self.make_solvable(label_entrance, label_exit)
-      else:
-        print("[🔨] Busca parede aleatória para quebrar.")
-        self.break_random_wall()
+      solved = self.floodfill(self.exit, self.entrance, label_exit, target_label=label_entrance)
+      self.clear_labels()
+      if not solved:
+        print("[🌊] Iniciando FloodFill (Entrada => Espaço vazio)!")
+        self.floodfill(self.entrance, self.exit, label_entrance, target_label=DEFAULT_LABEL)
+
+      self.make_solvable(label_entrance, label_exit)
 
   def clear_labels(self):
     for row in range(self.size):
@@ -96,7 +96,7 @@ class Maze:
     else:
       return False
 
-  def floodfill(self, element_position, target_position, label, second_time=False):
+  def floodfill(self, element_position, target_position, label, target_label=None):
     row, col = element_position
     element = self.maze[row][col]
 
@@ -105,13 +105,14 @@ class Maze:
     if element.label == label:
       return False
       
-    # element = self.cell(element_position)
     element.label = label
     # self.display(label_only=True)
+    # print()
 
-    # Se for a segunda 'inundação' (flood) e encontrar uma parede que se for quebrada
-    # irá conectar a primeira inundação, quebra e retorna True pois achou uma solução.
-    if second_time and self.find_and_break_wall(element_position, label):
+    # Se o target_label não for None, então estamos procurando uma label especifica encostada
+    # em uma parede. Quando encontramos ela, quebramos essa parede. A label pode ser a usada
+    # para o 'flood' da saída ou também uma celula vazia (quando não houver flood da saída proximo)
+    if target_label is not None and self.find_and_break_wall(element_position, label, target_label):
       return True
 
     directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
@@ -121,22 +122,21 @@ class Maze:
     for direction in directions:
       if element.direction(direction) == DOOR:
         neighbor_position = get_adjacent(element_position, direction)
-        if self.floodfill(neighbor_position, target_position, label, second_time):
+        if self.floodfill(neighbor_position, target_position, label, target_label):
           return True
     return False
 
-  def find_and_break_wall(self, position, label):
+  def find_and_break_wall(self, position, label, target_label):
     directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
 
     for direction in directions:
-      if self.check_side(position, direction, label):
+      if self.check_side(position, direction, label, target_label):
         self.create_door(position, direction)
-        print("[🌊] Parede que separa dois 'Floods' encontrada.")
-        print("[🚪] Porta criada.")
+        print("[🚪] Porta criada em %s na direção %s." % (position, direction))
         return True
     return False
 
-  def check_side(self, position, direction, label):
+  def check_side(self, position, direction, label, target_label):
     is_boundary_wall = self.is_boundary_wall(position, direction)
     has_neighbor = self.has_neighbor(position, direction)
 
@@ -145,7 +145,7 @@ class Maze:
 
     element = self.cell(position)
     neighbor = self.neighbor(position, direction)
-    neighbor_with_flood = (neighbor.label != label and neighbor.label != DEFAULT_LABEL)
+    neighbor_with_flood = (neighbor.label == target_label)
     wall_between_neighbor = element.direction(direction) == WALL
 
     return wall_between_neighbor and neighbor_with_flood
