@@ -44,9 +44,9 @@ common_wall_maze = [
 
 def test_maze_shared_wall():
   maze1 = Maze(4)
-  maze1.maze = non_common_wall_maze
-  maze1.entrance = (3,0)
-  maze1.exit = (1,3)
+  maze1.maze = common_wall_maze
+  maze1.entrance = (0,0)
+  maze1.exit = (3,3)
   
   print("=== Aqui começa a criação do labirinto teste. ===")
   maze1.make_solvable("👽", "👾")

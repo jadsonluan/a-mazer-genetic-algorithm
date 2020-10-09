@@ -161,8 +161,7 @@ class Maze:
       is_boundary_wall = self.is_boundary_wall(position, direction)
 
       if create_door and not is_boundary_wall and self.has_neighbor(position, direction):
-        self.cell(position).set_to_direction(direction, DOOR)
-        self.neighbor(position, direction).set_to_direction(opposite(direction), DOOR)
+        self.create_door(position, direction)
 
   def display(self, label_only=False):
     for row in range(self.size):
