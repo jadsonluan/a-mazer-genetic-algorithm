@@ -1,8 +1,12 @@
 from random import choice
 from .cell import Cell
+from .directions import Direction, opposite, get_adjacent
 
-DOOR = 1
 WALL = 0
+DOOR = 1
+
+DEFAULT_LABEL = "🔥"
+EMPTY_POSITION = (-1,-1)
 
 class Maze:
   def __init__(self, size):
@@ -17,7 +21,7 @@ class Maze:
     for row in range(self.size):
       maze.append([])
       for col in range(self.size):
-        maze[row].append(Cell(WALL, WALL, WALL, WALL, 0))
+        maze[row].append(Cell(WALL, WALL, WALL, WALL, DEFAULT_LABEL))
     return maze
 
   def is_boundary(self, row, col):
@@ -28,60 +32,142 @@ class Maze:
       for col in range(self.size):
         self.update_cell(row, col)
 
-    # FloodFill
-    label = 1
-    self.floodfill(self.entrance, label)
-
-  def floodfill(self, start, label):
-    queue = []
-    queue.append(start)
-    solved = False
-    while queue != [] and not solved:
-      r, c = queue.pop(0)
-      element = self.maze[r][c]
-      element.label = label
-      
-      # self.printLabels(label)
-
-      if (r,c) == self.exit:
-        solved = True
-        break
-
-      self.floodfill_step(queue, r, c, label)
+    label_entrance = 1
+    label_exit = 2
+    self.make_solvable(1, 2)
+    
+  def make_solvable(self, label_entrance, label_exit):
+    print("[🌊] Procurando solução por FloodFill!")
+    print("[🌊] Iniciando FloodFill (Entrada => Saida)!")
+    solved = self.floodfill(self.entrance, self.exit, label_entrance)
 
     if solved:
-      print ("Chegou na solução! 👍")
+      print("[✅] Saída encontrada! O labirinto possui solução.")
     else:
-      # Rodar o floodfill a partir da saida
-      # Se encontrar uma parede comum as duas inundações, quebre-a
-      # caso contrário, cria uma porta aleatoria 
-      pass
+      print("[❌] Saída não encontrada!")
+      print("[🌊] Iniciando FloodFill (Saida => Entrada)!")
+      solved = self.floodfill(self.exit, self.entrance, label_exit, second_time=True)
 
-  def floodfill_step(self, queue, row, col, label):
-    element = self.maze[row][col]
-    if element.left == DOOR and self.maze[row][col-1].label != label:
-      queue.append((row, col-1))
-    
-    if element.top == DOOR and self.maze[row-1][col].label != label:
-      queue.append((row-1,col))
+      if solved:
+        self.clear_labels()
+        self.make_solvable(label_entrance, label_exit)
+      else:
+        print("[🔨] Busca parede aleatória para quebrar.")
+        self.break_random_wall()
 
-    if element.right == DOOR and self.maze[row][col+1].label != label:
-      queue.append((row, col+1))
-
-    if element.bottom == DOOR and self.maze[row+1][col].label != label:
-      queue.append((row+1, col))
-
-  def printLabels(self, label):
+  def clear_labels(self):
     for row in range(self.size):
       for col in range(self.size):
-        result = "🐀" if self.maze[row][col].label == label else "❌"
-        if (row, col) == self.entrance:
-          result = "👽"
-        elif (row, col) == self.exit:
-          result = "💎"
-        print(result, end=" ")
-      print()
-    print()
+        self.get_cell((row, col)).label = DEFAULT_LABEL
+
+  def break_random_wall(self):
+    print("Criando uma porta 🚪 aleatoria!")
+    # valid_wall = False
+    # while not valid_wall:
+    #   position = (choice([0, self.size - 1]), choice([0, self.size - 1]))
+    #   if position == self.exit or position == self.entrance:
+    #     continue
+    
+    # element = self.get_cell()
+    # directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
+    # direction = choice(directions)
+    # print(element, direction)
+        
+  def get_cell(self, pos):
+    row, col = pos
+    return self.maze[row][col]
+  
+  def neighbor(self, position, direction):
+    neighbor_position = get_adjacent(position, direction)
+    return self.get_cell(neighbor_position)
+
+  def is_boundary_wall(self, position, direction):
+    row, col = position
+    is_boundary = self.is_boundary(row, col)
+    if direction == Direction.LEFT:
+      return (is_boundary and col == 0)
+    elif direction == Direction.TOP:
+      return (is_boundary and row == 0)
+    elif direction == Direction.RIGHT:
+      return (is_boundary and col == self.size - 1)
+    elif direction == Direction.LEFT:
+      return (is_boundary and bottom == self.size - 1)
+    else:
+      return False
+
+  def floodfill(self, element_position, target_position, label, second_time=False):
+    row, col = element_position
+    element = self.maze[row][col]
+
+    if element_position == target_position:
+      return True
+    if element.label == label:
+      return False
+      
+    self.maze[row][col].label = label
+    # self.display(label_only=True)
+
+    if second_time and self.find_and_break_wall(element_position, label):
+      return True
+
+    left = False
+    if element.left == DOOR:
+      left = self.floodfill((row, col - 1), target_position, label, second_time)
+
+    top = False
+    if element.top == DOOR:
+      top = self.floodfill((row - 1, col), target_position, label, second_time)
+
+    right = False
+    if element.right == DOOR:
+      right = self.floodfill((row, col + 1), target_position, label, second_time)
+
+    bottom = False
+    if element.bottom == DOOR:
+      bottom = self.floodfill((row + 1, col), target_position, label, second_time)
+
+    return left or top or right or bottom
+
+  def find_and_break_wall(self, position, label):
+    directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
+
+    for direction in directions:
+      if self.check_side(position, direction, label):
+        self.create_door(position, direction)
+        print("[🌊] Parede que separa dois 'Floods' encontrada.")
+        print("[🚪] Porta criada.")
+        return True
+    return False
+
+  def check_side(self, position, direction, label):
+    is_boundary_wall = self.is_boundary_wall(position, direction)
+    has_neighbor = self.has_neighbor(position, direction)
+
+    if is_boundary_wall or not has_neighbor:
+      return False
+
+    element = self.get_cell(position)
+    neighbor = self.neighbor(position, direction)
+    neighbor_with_flood = (neighbor.label != label and neighbor.label != DEFAULT_LABEL)
+    wall_between_neighbor = element.direction(direction) == WALL
+
+    return wall_between_neighbor and neighbor_with_flood
+
+  def create_door(self, position, direction):
+    if self.has_neighbor(position, direction):
+      element = self.get_cell(position)
+      neighbor = self.neighbor(position, direction)
+      opposite_direction = opposite(direction)
+
+      element.set_to_direction(direction, DOOR)
+      neighbor.set_to_direction(opposite_direction, DOOR)
+      return True
+    return False
+
+  def has_neighbor(self, position, direction):
+    neighbor_position = get_adjacent(position, direction)
+    row, col = neighbor_position
+    return (row >= 0 and row < self.size) and (col >= 0 and col < self.size)
 
   def left_step(self, row, col):
     create_door = choice([True,False])
@@ -117,8 +203,8 @@ class Maze:
     self.right_step(row, col)
     self.bottom_step(row, col)
 
-  def display(self):
+  def display(self, label_only=False):
     for row in range(self.size):
       for col in range(self.size):
-        print(self.maze[row][col], end="")
+        print(self.maze[row][col] if not label_only else self.get_cell((row,col)).label, end=" ")
       print()
