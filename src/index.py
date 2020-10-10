@@ -2,7 +2,11 @@
 from amazer import Maze
 from amazer import Cell
 from amazer import Direction
+<<<<<<< HEAD
 from amazer import Ag
+=======
+from plot import FitnessPlot
+>>>>>>> Add initial plot class
 
 DOOR = 1
 WALL = 0
@@ -80,7 +84,6 @@ maze = Maze(10)
 print('entrance', maze.entrance)
 print('exit', maze.exit)
 
-
 print("RESOLVENDO O LABIRINTO")
 
 # paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, taxa de mutação (0 a 100))
@@ -88,3 +91,6 @@ resolution = Ag(maze, 20, 100, 30, 10)
 
 #expondo todos os fitness
 #print(resolution.all_fitness)
+fitness_plot = FitnessPlot([[4, 4, 4, 4], [1, 3, 5, 7], [1, 3, 5], [1, 2, 3, 4, 4]])
+print(fitness_plot.get_fitnesses_means())
+print(fitness_plot.get_fitnesses_medians())
