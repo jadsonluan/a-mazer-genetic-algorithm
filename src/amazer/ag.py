@@ -26,6 +26,8 @@ class Ag:
     while (0 not in self.population.get_fitness()) and (generations < 10):
       self.evaluation()
       generations += 1
+      print(self.population.get_directions())
+      print()
       print("---- GERANDO OUTRA POPULAÇÃO ----")
       print()
       self.population.genarate_population()

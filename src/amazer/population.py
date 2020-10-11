@@ -20,6 +20,12 @@ class Population:
     for i in self.population_sorted():
       result.append(i.fitness)
     return sorted(result)
+    
+  def get_directions(self):
+    result = []
+    for i in self.population_sorted():
+      result.append(i.directions)
+    return sorted(result)
   
   def change_fitness(self, index, value):
     self.chromosomes[index].fitness = value
@@ -38,6 +44,7 @@ class Population:
       child2 = Chromosome(self.sub_chromosome(parent1, parent2), 100)
       result.append(child1)
       result.append(child2)
+    self.chromosomes = result
     return result
 
   def make_mutation(self, rate):
