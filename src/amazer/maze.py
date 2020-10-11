@@ -38,23 +38,33 @@ class Maze:
     self.make_solvable(1, 2)
     
   def make_solvable(self, label_entrance, label_exit):
-    self.clear_labels()
-    print("[🌊] Iniciando FloodFill (Entrada => Saida)!")
-    solved = self.floodfill(self.entrance, self.exit, label_entrance)
+    solved = False
+    break_random_wall_from_entrance = True
 
-    if solved:
-      print("[✅] Saída encontrada! O labirinto possui solução.")
-    else:
+    while True:
+      self.clear_labels()
+      print("[🌊] Iniciando FloodFill (Entrada => Saida)!")      
+      solved = self.floodfill(self.entrance, self.exit, label_entrance)
+      if solved:
+        break
+
       print("[❌] Saída não encontrada!")
       print("[🌊] Iniciando FloodFill (Saida => Entrada)!")
-
       solved = self.floodfill(self.exit, self.entrance, label_exit, target_label=label_entrance)
+      if solved:
+        continue
+
+      print("[❌] Saída não encontrada!")
       self.clear_labels()
-      if not solved:
+
+      if break_random_wall_from_entrance:
         print("[🌊] Iniciando FloodFill (Entrada => Espaço vazio)!")
         self.floodfill(self.entrance, self.exit, label_entrance, target_label=DEFAULT_LABEL)
-
-      self.make_solvable(label_entrance, label_exit)
+      else:
+        print("[🌊] Iniciando FloodFill (Saída => Espaço vazio)!")
+        self.floodfill(self.exit, self.entrance, label_exit, target_label=DEFAULT_LABEL)
+      break_random_wall_from_entrance = not break_random_wall_from_entrance
+    print("[✅] Saída encontrada! O labirinto possui solução.")
 
   def clear_labels(self):
     for row in range(self.size):
@@ -78,8 +88,8 @@ class Maze:
       return (is_boundary and row == 0)
     elif direction == Direction.RIGHT:
       return (is_boundary and col == self.size - 1)
-    elif direction == Direction.LEFT:
-      return (is_boundary and bottom == self.size - 1)
+    elif direction == Direction.BOTTOM:
+      return (is_boundary and col == self.size - 1)
     else:
       return False
 
@@ -93,8 +103,8 @@ class Maze:
       return False
       
     element.label = label
-    # self.display(label_only=True)
-    # print()
+    self.display(label_only=True)
+    print()
 
     # Se o target_label não for None, então estamos procurando uma label especifica encostada
     # em uma parede. Quando encontramos ela, quebramos essa parede. A label pode ser a usada
