@@ -15,8 +15,8 @@ class Maze:
     self.maze = self.create_maze(size)
     self.entrance = (choice(range(size)), 0)
     self.exit = (choice(range(size)), size - 1)
-    self.canvas = MazeCanvas(self.maze)
     self.init()
+    self.canvas = MazeCanvas(self.maze, self.entrance, self.exit)
 
   def create_maze(self, size):
     maze = []

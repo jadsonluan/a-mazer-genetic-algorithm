@@ -17,8 +17,10 @@ COLOR_BLUE = (0, 0, 255)
 
 
 class MazeCanvas():
-	def __init__(self, maze):
+	def __init__(self, maze, entr, ext):
 		self.maze = maze
+		self.entrance = entr
+		self.exit = ext
 		self.screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 		pygame.display.set_caption("A-Mazer Genetic Algorithm")
 	
@@ -28,6 +30,12 @@ class MazeCanvas():
 			row = self.maze[i]
 			for j in range(len(row)):
 				cell = row[j]
+
+				if (i, j) == self.entrance:
+					pygame.draw.rect(self.screen, COLOR_GREEN, (i * line_size + 1, j * line_size + 1, line_size - 1, line_size - 1))
+				
+				if (i, j) == self.exit:
+					pygame.draw.rect(self.screen, COLOR_RED, (i * line_size + 1, j * line_size + 1, line_size - 1, line_size - 1))
 
 				top_left_coords_from = (i * line_size, j * line_size)
 				bottom_right_coords_from = (i * line_size + line_size, j * line_size + line_size)
@@ -46,4 +54,4 @@ class MazeCanvas():
 				if (cell.bottom == WALL):
 					pygame.draw.line(self.screen, COLOR_WHITE, bottom_right_coords_from, bottom_coords_to)
 
-				pygame.display.flip()
+		pygame.display.flip()
