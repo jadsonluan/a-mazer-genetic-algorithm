@@ -51,4 +51,3 @@ class FitnessPlot:
         pyplot.xticks(generations)
         pyplot.yticks(fitnesses)
         pyplot.show()
-        return data
