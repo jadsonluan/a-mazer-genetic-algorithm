@@ -18,20 +18,31 @@ class Ag:
   def __init__(self, maze, chromosome_size, number_chromosomes):
     self.maze = maze
     self.population = Population(chromosome_size, number_chromosomes)
+    self.all_fitness = []
     self.init()
   
   def init(self):
     generations = 0
-
-    while (0 not in self.population.get_fitness()) and (generations < 10):
+    #parametrizar número de gerações
+    for a in range(20):
       self.evaluation()
       generations += 1
-      print(self.population.get_directions())
+      self.population.population_sorted()
+      self.all_fitness.append(self.population.get_fitness())
+      print(self.population.get_fitness())
+      #print(self.population.get_directions())
+      if self.population.find_result:
+        break
       print()
       print("---- GERANDO OUTRA POPULAÇÃO ----")
       print()
       self.population.genarate_population()
+      self.population.make_mutation(10)
+    print()
+    print("---FITNESS GERADO---")
+    #print(self.all_fitness)
     print("numero de gerações geradas", generations)
+    
 
   def evaluation(self):
     solutions = 0
@@ -42,6 +53,8 @@ class Ag:
 
     print(solutions)
     if(0 in self.population.get_fitness()):
+      self.population.result_found()
+      print(self.population.result_found())
       print("Encontramos a saída")
     else:
       print("Não encontramos a saída")
@@ -68,6 +81,6 @@ class Ag:
         if self.maze.maze[actualRow][actualCol].right == DOOR:
           actualRow, actualCol = get_adjacent((actualRow, actualCol), Direction.RIGHT)
       elif direction == BOTTOM:
-        if self.maze.maze[actualRow][actualCol].left == BOTTOM:
+        if self.maze.maze[actualRow][actualCol].bottom == DOOR:
           actualRow, actualCol = get_adjacent((actualRow, actualCol), Direction.BOTTOM)
     return actualRow, actualCol

@@ -52,7 +52,7 @@ def test_maze_shared_wall():
   print("=== Aqui começa a criação do labirinto teste. ===")
   maze1.make_solvable("👽", "👾")
 
-maze = Maze(5)
+maze = Maze(10)
 # maze.display()
 print('entrance', maze.entrance)
 print('exit', maze.exit)
@@ -60,4 +60,5 @@ print('exit', maze.exit)
 
 print("RESOLVENDO O LABIRINTO")
 
-resolution = Ag(maze, 10, 100)
+resolution = Ag(maze, 20, 100)
+print(resolution.all_fitness)
