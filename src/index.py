@@ -75,7 +75,7 @@ def test_maze_shared_wall():
 
 
 # test_no_doors_entrance_exit_maze()
-maze = Maze(30)
+maze = Maze(10)
 # maze.display()
 print('entrance', maze.entrance)
 print('exit', maze.exit)

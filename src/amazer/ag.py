@@ -9,11 +9,6 @@ from .population import Population
 WALL = 0
 DOOR = 1
 
-LEFT = 0
-TOP = 1
-RIGHT = 2
-BOTTOM = 3
-
 class Ag:
   def __init__(self, maze, chromosome_size, number_chromosomes, max_generation, mutation_rate):
     self.maze = maze
