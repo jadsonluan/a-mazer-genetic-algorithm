@@ -78,7 +78,7 @@ class Maze:
       return (is_boundary and row == 0)
     elif direction == Direction.RIGHT:
       return (is_boundary and col == self.size - 1)
-    elif direction == Direction.LEFT:
+    elif direction == Direction.BOTTOM:
       return (is_boundary and bottom == self.size - 1)
     else:
       return False
