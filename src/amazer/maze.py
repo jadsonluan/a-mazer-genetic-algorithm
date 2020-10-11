@@ -1,6 +1,7 @@
 from random import choice
 from .cell import Cell
 from .directions import Direction, opposite, get_adjacent
+from .canvas import MazeCanvas
 
 WALL = 0
 DOOR = 1
@@ -14,6 +15,7 @@ class Maze:
     self.maze = self.create_maze(size)
     self.entrance = (choice(range(size)), 0)
     self.exit = (choice(range(size)), size - 1)
+    self.canvas = MazeCanvas(self.maze)
     self.init()
 
   def create_maze(self, size):
@@ -173,8 +175,6 @@ class Maze:
       if create_door and not is_boundary_wall and self.has_neighbor(position, direction):
         self.create_door(position, direction)
 
-  def display(self, label_only=False):
-    for row in range(self.size):
-      for col in range(self.size):
-        print(self.maze[row][col] if not label_only else self.cell((row,col)).label, end=" ")
-      print()
+  def display(self):
+    while True:
+      self.canvas.draw()

@@ -3,6 +3,7 @@ from .maze import Maze
 from .directions import Direction
 from .ag import Ag
 from .population import Population
+from .canvas import MazeCanvas
 
 
-__all__ = ['Maze', 'Cell', 'Direction']
+__all__ = ['Maze', 'Cell', 'Direction', 'MazeCanvas']
