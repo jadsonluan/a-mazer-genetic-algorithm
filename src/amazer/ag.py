@@ -15,33 +15,33 @@ RIGHT = 2
 BOTTOM = 3
 
 class Ag:
-  def __init__(self, maze, chromosome_size, number_chromosomes):
+  def __init__(self, maze, chromosome_size, number_chromosomes, max_generation, mutation_rate):
     self.maze = maze
-    self.population = Population(chromosome_size, number_chromosomes)
+    self.population = Population(chromosome_size, number_chromosomes, maze.size**2)
     self.all_fitness = []
-    self.init()
+    self.all_solutions = []
+    self.init(max_generation, mutation_rate)
   
-  def init(self):
+  def init(self, max_generation, mutation_rate):
     generations = 0
-    #parametrizar número de gerações
-    for a in range(20):
+
+    for a in range(max_generation):
       self.evaluation()
       generations += 1
       self.population.population_sorted()
       self.all_fitness.append(self.population.get_fitness())
-      print(self.population.get_fitness())
-      #print(self.population.get_directions())
+     
       if self.population.find_result:
         break
       print()
-      print("---- GERANDO OUTRA POPULAÇÃO ----")
+      print("GERANDO OUTRA POPULAÇÃO ...")
       print()
-      self.population.genarate_population()
-      self.population.make_mutation(10)
-    print()
-    print("---FITNESS GERADO---")
-    #print(self.all_fitness)
-    print("numero de gerações geradas", generations)
+      self.population.generate_population()
+      self.population.make_mutation(mutation_rate)
+    
+    print("As soluções encontradas foram:")
+    print(self.all_solutions)
+    print("Numero de gerações geradas:", generations)
     
 
   def evaluation(self):
@@ -51,10 +51,9 @@ class Ag:
         
       solutions = self.update_fitness(actualRow, actualCol, i, solutions)
 
-    print(solutions)
+    print("Número de soluções geradas:", solutions)
     if(0 in self.population.get_fitness()):
       self.population.result_found()
-      print(self.population.result_found())
       print("Encontramos a saída")
     else:
       print("Não encontramos a saída")
@@ -64,23 +63,14 @@ class Ag:
     self.population.change_fitness(i, fitness)
     if(actualRow, actualCol) == self.maze.exit:
       # cromossomo chegou na saída
-      print(self.population.chromosomes[i].directions)
+      self.all_solutions.append(self.population.chromosomes[i].directions)
       solutions += 1
     return solutions
 
   def run_maze(self, i, entrance):
     actualRow, actualCol = entrance
+    base = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
     for direction in self.population.chromosomes[i].directions:
-      if direction == LEFT:
-        if self.maze.maze[actualRow][actualCol].left == DOOR:
-          actualRow, actualCol = get_adjacent((actualRow, actualCol), Direction.LEFT)
-      elif direction == TOP:
-        if self.maze.maze[actualRow][actualCol].top == DOOR:
-          actualRow, actualCol = get_adjacent((actualRow, actualCol), Direction.TOP)
-      elif direction == RIGHT:
-        if self.maze.maze[actualRow][actualCol].right == DOOR:
-          actualRow, actualCol = get_adjacent((actualRow, actualCol), Direction.RIGHT)
-      elif direction == BOTTOM:
-        if self.maze.maze[actualRow][actualCol].bottom == DOOR:
-          actualRow, actualCol = get_adjacent((actualRow, actualCol), Direction.BOTTOM)
+      if self.maze.maze[actualRow][actualCol].direction(base[direction]) == DOOR:
+        actualRow, actualCol = get_adjacent((actualRow, actualCol), base[direction])
     return actualRow, actualCol
