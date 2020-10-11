@@ -8,6 +8,27 @@ WALL = 0
 LAB = "🔥"
 
 # _________
+# | ______|
+# |_|_|_|_S
+# |___| |_|
+# |E|_|_|_|
+# 
+no_doors_entrance_exit_maze = [
+  [Cell(WALL,WALL,DOOR,DOOR,LAB),Cell(DOOR,WALL,DOOR,WALL,LAB),Cell(DOOR,WALL,DOOR,WALL,LAB),Cell(DOOR,WALL,WALL,WALL,LAB)],
+  [Cell(WALL,DOOR,WALL,WALL,LAB),Cell(WALL,WALL,WALL,WALL,LAB),Cell(WALL,WALL,WALL,WALL,LAB),Cell(WALL,WALL,WALL,WALL,LAB)],
+  [Cell(WALL,WALL,DOOR,WALL,LAB),Cell(DOOR,WALL,WALL,WALL,LAB),Cell(WALL,WALL,WALL,DOOR,LAB),Cell(WALL,WALL,WALL,WALL,LAB)],
+  [Cell(WALL,WALL,WALL,WALL,LAB),Cell(WALL,WALL,WALL,WALL,LAB),Cell(WALL,DOOR,WALL,WALL,LAB),Cell(WALL,WALL,WALL,WALL,LAB)]
+]
+def test_no_doors_entrance_exit_maze():
+  maze1 = Maze(4)
+  maze1.maze = no_doors_entrance_exit_maze
+  maze1.entrance = (3,0)
+  maze1.exit = (1,3)
+
+  print("=== Aqui começa a criação do labirinto teste. ===")
+  maze1.make_solvable("👽", "👾")
+
+# _________
 # | _____ |
 # |_|   |_S
 # |___| |_|
@@ -51,6 +72,7 @@ def test_maze_shared_wall():
   print("=== Aqui começa a criação do labirinto teste. ===")
   maze1.make_solvable("👽", "👾")
 
+# test_no_doors_entrance_exit_maze()
 maze = Maze(30)
 # maze.display()
 print('entrance', maze.entrance)
