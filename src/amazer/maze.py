@@ -89,8 +89,8 @@ class Maze:
     elif direction == Direction.RIGHT:
       return (is_boundary and col == self.size - 1)
     elif direction == Direction.BOTTOM:
-      return (is_boundary and col == self.size - 1)
-    else:
+      return (is_boundary and row == self.size - 1)
+    else: 
       return False
 
   def floodfill(self, element_position, target_position, label, target_label=None):
