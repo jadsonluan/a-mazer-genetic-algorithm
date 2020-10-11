@@ -2,6 +2,7 @@
 from amazer import Maze
 from amazer import Cell
 from amazer import Direction
+from amazer import Ag
 
 DOOR = 1
 WALL = 0
@@ -51,7 +52,12 @@ def test_maze_shared_wall():
   print("=== Aqui começa a criação do labirinto teste. ===")
   maze1.make_solvable("👽", "👾")
 
-maze = Maze(30)
+maze = Maze(5)
 # maze.display()
 print('entrance', maze.entrance)
 print('exit', maze.exit)
+
+
+print("RESOLVENDO O LABIRINTO")
+
+resolution = Ag(maze, 10, 100)
