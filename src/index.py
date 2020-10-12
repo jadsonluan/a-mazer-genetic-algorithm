@@ -1,12 +1,5 @@
 # coding: utf-8
-from amazer import Maze
-from amazer import Cell
-<<<<<<< HEAD
-from amazer import Direction
-from amazer import Ag
-=======
-from amazer import Direction, MazeCanvas
->>>>>>> Add entrance and exit
+from amazer import Maze, Cell, Direction, Ag, MazeCanvas
 
 DOOR = 1
 WALL = 0
@@ -85,3 +78,4 @@ print('exit', maze.exit)
 print("RESOLVENDO O LABIRINTO")
 # paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, número de elementos a sofrer mutação)
 resolution = Ag(maze, 20, 100, 20, 10)
+# print(resolution.all_fitness)
