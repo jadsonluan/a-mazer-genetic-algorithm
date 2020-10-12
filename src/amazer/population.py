@@ -18,7 +18,7 @@ class Population:
 
   def get_fitness(self):
     result = []
-    for i in self.population_sorted():
+    for i in self.chromosomes:
       result.append(i.fitness)
     return sorted(result)
     
@@ -39,17 +39,18 @@ class Population:
   def generate_population(self):
     #tamanho da população deve ser par
     result = []
+    parent_with_weight = choices(self.chromosomes, weights=self.get_fitness(), k=len(self.chromosomes))
     for i in range(0, len(self.chromosomes), 2):
-      self.crossover(i, result)
+      self.crossover(i, result, parent_with_weight)
     
     # setando a nova população
     self.chromosomes = result
     self.find_result = False
     return result
 
-  def crossover(self, i, result):
-    parent1 = self.chromosomes[i].directions
-    parent2 = self.chromosomes[i+1].directions
+  def crossover(self, i, result, parent_with_weight):
+    parent1 = parent_with_weight[i].directions
+    parent2 = parent_with_weight[i+1].directions
     # criando dois novos filhos
     child1 = Chromosome(self.change_half(parent1, parent2), self.initial_fitness)
     child2 = Chromosome(self.change_half(parent2, parent1), self.initial_fitness)
@@ -61,11 +62,14 @@ class Population:
     result.append(child2)
 
   def make_mutation(self, rate):
-    for i in range(rate):
-      chromosome_index = choice(range(len(self.chromosomes)))
-      direction = choice(range(len(self.chromosomes[chromosome_index].directions)))
-      change = choice(directions_base)
-      self.chromosomes[chromosome_index].directions[direction] = change
+    options = [True, False]
+    rates = [rate, 100-rate]
+    
+    for i in range(len(self.chromosomes)):
+      if(choices(options, weights=rates, k=1)[0]):
+        direction = choice(range(len(self.chromosomes[i].directions)))
+        change = choice(directions_base)
+        self.chromosomes[i].directions[direction] = change
 
 
   def sum_chromosome(self, parent1, parent2):

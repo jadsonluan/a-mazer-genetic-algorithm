@@ -1,5 +1,5 @@
 from random import choice, choices
-from math import sqrt
+from math import sqrt, inf
 from .cell import Cell
 from .maze import Maze
 from .directions import Direction, opposite, get_adjacent
@@ -47,20 +47,31 @@ class Ag:
       solutions = self.update_fitness(actualRow, actualCol, i, solutions)
 
     print("Número de soluções geradas:", solutions)
-    if(0 in self.population.get_fitness()):
-      self.population.result_found()
-      print("Encontramos a saída")
-    else:
-      print("Não encontramos a saída")
+
 
   def update_fitness(self, actualRow, actualCol, i, solutions):
-    fitness = sqrt((actualRow - self.maze.exit[0])**2 + (actualCol - self.maze.exit[1])**2)
+    fitness = self.fitness_calculation(actualRow, actualCol)
     self.population.change_fitness(i, fitness)
     if(actualRow, actualCol) == self.maze.exit:
       # cromossomo chegou na saída
+      self.population.result_found()
       self.all_solutions.append(self.population.chromosomes[i].directions)
       solutions += 1
     return solutions
+
+  def fitness_calculation(self, actualRow, actualCol):
+    distance_entrance = self.calculateDistance(self.maze.entrance, (actualRow, actualCol))
+    distance_exit = self.calculateDistance((actualRow, actualCol), self.maze.exit)
+    if distance_exit == 0:
+      return inf
+    result = (distance_entrance / distance_exit) * 100
+    return result
+
+  def calculateDistance(self, start, end):
+    x1, y1 = start
+    x2, y2 = end
+    distance = sqrt((x2 - x1)**2 + (y2 - y1)**2)
+    return distance
 
   def run_maze(self, i, entrance):
     actualRow, actualCol = entrance

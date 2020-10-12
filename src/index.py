@@ -83,8 +83,8 @@ print('exit', maze.exit)
 
 print("RESOLVENDO O LABIRINTO")
 
-# paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, número de elementos a sofrer mutação)
-resolution = Ag(maze, 20, 100, 20, 10)
+# paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, taxa de mutação (0 a 100))
+resolution = Ag(maze, 20, 100, 30, 10)
 
 #expondo todos os fitness
 #print(resolution.all_fitness)
