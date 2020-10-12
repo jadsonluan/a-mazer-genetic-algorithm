@@ -112,7 +112,7 @@ class Maze:
     if target_label is not None and self.find_and_break_wall(element_position, label, target_label):
       return True
 
-    directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
+    directions = [Direction.RIGHT, Direction.TOP, Direction.BOTTOM, Direction.LEFT]
     result = False
 
     # Se algum vizinho encontrar a solução
@@ -164,7 +164,7 @@ class Maze:
     return (row >= 0 and row < self.size) and (col >= 0 and col < self.size)
 
   def randomize_walls(self, position):
-    directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
+    directions = [Direction.RIGHT, Direction.LEFT, Direction.TOP, Direction.BOTTOM]
 
     for direction in directions:
       create_door = choice([True,False,False])
