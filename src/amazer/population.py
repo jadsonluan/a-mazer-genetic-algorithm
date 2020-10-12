@@ -62,11 +62,14 @@ class Population:
     result.append(child2)
 
   def make_mutation(self, rate):
-    for i in range(rate):
-      chromosome_index = choice(range(len(self.chromosomes)))
-      direction = choice(range(len(self.chromosomes[chromosome_index].directions)))
-      change = choice(directions_base)
-      self.chromosomes[chromosome_index].directions[direction] = change
+    options = [True, False]
+    rates = [rate, 100-rate]
+    
+    for i in range(len(self.chromosomes)):
+      if(choices(options, weights=rates, k=1)[0]):
+        direction = choice(range(len(self.chromosomes[i].directions)))
+        change = choice(directions_base)
+        self.chromosomes[i].directions[direction] = change
 
 
   def sum_chromosome(self, parent1, parent2):
