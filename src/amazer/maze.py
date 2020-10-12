@@ -124,7 +124,7 @@ class Maze:
     return False
 
   def find_and_break_wall(self, position, label, target_label):
-    directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
+    directions = [Direction.RIGHT, Direction.LEFT, Direction.TOP, Direction.BOTTOM]
 
     for direction in directions:
       if self.check_side(position, direction, label, target_label):
