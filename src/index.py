@@ -2,6 +2,7 @@
 from amazer import Maze
 from amazer import Cell
 from amazer import Direction
+from amazer import Ag
 
 DOOR = 1
 WALL = 0
@@ -72,8 +73,18 @@ def test_maze_shared_wall():
   print("=== Aqui começa a criação do labirinto teste. ===")
   maze1.make_solvable("👽", "👾")
 
+
 # test_no_doors_entrance_exit_maze()
-maze = Maze(30)
+maze = Maze(10)
 # maze.display()
 print('entrance', maze.entrance)
 print('exit', maze.exit)
+
+
+print("RESOLVENDO O LABIRINTO")
+
+# paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, número de elementos a sofrer mutação)
+resolution = Ag(maze, 20, 100, 20, 10)
+
+#expondo todos os fitness
+#print(resolution.all_fitness)
