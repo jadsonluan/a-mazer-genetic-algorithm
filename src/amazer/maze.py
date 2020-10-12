@@ -167,7 +167,7 @@ class Maze:
     directions = [Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM]
 
     for direction in directions:
-      create_door = choice([True,False])
+      create_door = choice([True,False,False])
       is_boundary_wall = self.is_boundary_wall(position, direction)
 
       if create_door and not is_boundary_wall and self.has_neighbor(position, direction):
