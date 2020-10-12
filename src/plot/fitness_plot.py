@@ -1,19 +1,25 @@
 from matplotlib import pyplot
 from statistics import median, mean
-import math
+from math import inf
 from .plot_model import PlotModel
 
 
 class FitnessPlot:
   def __init__(self, fitnesses):
     self.fitnesses = fitnesses
+    self.remove_infinite_values()
+  
+  def remove_infinite_values(self):
+    for index in range(len(self.fitnesses)):
+      generation_fitnesses = self.fitnesses[index]
+      generation_fitnesses = [x if x != inf else 1000 for x in generation_fitnesses]
+      self.fitnesses[index] = generation_fitnesses
 
   """
   Returns the statistical value for the population fitnesses, given the model.
   If model is "MEAN", it returns the mean of the popoulation fitnesses.
   If model is "MEDIAN", it returns the median of the popoulation fitnesses.
   """
-
   def get_fitnesses_statistical_value(self, model):
     results = []
     calc_function = None
@@ -33,7 +39,6 @@ class FitnessPlot:
   """
   Generates a graph of a-maze solver generations vs. population fitness
   """
-
   def plot(self, model):
     fitnesses = self.get_fitnesses_statistical_value(model)
     generations = range(1, len(fitnesses) + 1)
