@@ -84,11 +84,10 @@ print('exit', maze.exit)
 
 print("RESOLVENDO O LABIRINTO")
 
-# paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, taxa de mutação (0 a 100))
+# paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, número de elementos a sofrer mutação)
 resolution = Ag(maze, 20, 100, 30, 10)
 
-#expondo todos os fitness
-#print(resolution.all_fitness)
-
-fitness_plot = FitnessPlot([[4, 4, 4, 4], [1, 3, 5, 7], [1, 3, 5], [1, 2, 3, 4, 4]])
-print(fitness_plot.plot(PlotModel.MEAN))
+# geração do gráfico a partir dos fitnesses
+fitness_plot = FitnessPlot(resolution.all_fitness)
+fitness_plot.plot(PlotModel.MEDIAN)
+# print(len(resolution.all_solutions))
