@@ -36,7 +36,7 @@ class FitnessPlot:
 
   def plot(self, model):
     fitnesses = self.get_fitnesses_statistical_value(model)
-    generations = range(len(fitnesses))
+    generations = range(1, len(fitnesses) + 1)
 
     data_dict = {"generations": generations, "fitnesses": fitnesses}
 
