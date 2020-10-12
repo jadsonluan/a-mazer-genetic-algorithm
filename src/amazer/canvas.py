@@ -27,17 +27,19 @@ class MazeCanvas():
 	def get_x_and_y_axis(self, row, col, line_size):
 		return [col * line_size, row * line_size]
 	
+	def draw_rect(self, line_size, color, x, y):
+		cell_padding = 5
+		pygame.draw.rect(self.screen, color, (x + cell_padding, y + cell_padding, line_size - (2 * cell_padding), line_size - (2 * cell_padding)))
+	
 	def draw_entrance(self, line_size):
 		row, col = self.entrance
 		x, y = self.get_x_and_y_axis(row, col, line_size)
-		cell_padding = 5
-		pygame.draw.rect(self.screen, COLOR_GREEN, (x + cell_padding, y + cell_padding, line_size - (2 * cell_padding), line_size - (2 * cell_padding)))
+		self.draw_rect(line_size, COLOR_GREEN, x, y)
 
 	def draw_exit(self, line_size):
 		row, col = self.exit
 		x, y = self.get_x_and_y_axis(row, col, line_size)
-		cell_padding = 5
-		pygame.draw.rect(self.screen, COLOR_RED, (x + cell_padding, y + cell_padding, line_size - (2 * cell_padding), line_size - (2 * cell_padding)))
+		self.draw_rect(line_size, COLOR_RED, x, y)
 
 	def draw_cell(self, cell, row, col, line_size):
 		x, y = self.get_x_and_y_axis(row, col, line_size)
