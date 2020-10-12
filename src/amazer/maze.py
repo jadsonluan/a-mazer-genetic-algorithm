@@ -16,7 +16,7 @@ class Maze:
     self.entrance = (choice(range(size)), 0)
     self.exit = (choice(range(size)), size - 1)
     self.init()
-    self.canvas = MazeCanvas(self.maze, self.entrance, self.exit)
+    self.canvas = MazeCanvas(self.entrance, self.exit)
 
   def create_maze(self, size):
     maze = []
@@ -105,7 +105,7 @@ class Maze:
       return False
       
     element.label = label
-    self.display(label_only=True)
+    # self.display(label_only=True)
     print()
 
     # Se o target_label não for None, então estamos procurando uma label especifica encostada
@@ -169,12 +169,11 @@ class Maze:
     directions = [Direction.RIGHT, Direction.LEFT, Direction.TOP, Direction.BOTTOM]
 
     for direction in directions:
-      create_door = choice([True,False,False])
+      create_door = choice([True, False, False])
       is_boundary_wall = self.is_boundary_wall(position, direction)
 
       if create_door and not is_boundary_wall and self.has_neighbor(position, direction):
         self.create_door(position, direction)
 
   def display(self):
-    while True:
-      self.canvas.draw()
+    self.canvas.draw(self.maze)
