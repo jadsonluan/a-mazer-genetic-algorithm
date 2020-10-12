@@ -47,11 +47,7 @@ class Ag:
       solutions = self.update_fitness(actualRow, actualCol, i, solutions)
 
     print("Número de soluções geradas:", solutions)
-    '''
-    if(self.population.find_result):
-      print("Encontramos a saída")
-    else:
-      print("Não encontramos a saída")'''
+
 
   def update_fitness(self, actualRow, actualCol, i, solutions):
     fitness = self.fitness_calculation(actualRow, actualCol)
