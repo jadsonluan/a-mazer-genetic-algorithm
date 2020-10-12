@@ -1,11 +1,13 @@
 import pygame
 import math
 from pygame.locals import *
+from .labels import Label
 
 WALL = 0
 DOOR = 1
 
 pygame.init()
+clock = pygame.time.Clock()
 
 SCREEN_SIZE = 600
 MAZE_SIZE = 600
@@ -35,6 +37,11 @@ class MazeCanvas():
 		row, col = self.entrance
 		x, y = self.get_x_and_y_axis(row, col, line_size)
 		self.draw_rect(line_size, COLOR_GREEN, x, y)
+	
+	def draw_label(self, cell, row, col, line_size):
+		if cell.label == Label.MOVEMENT:
+			x, y = self.get_x_and_y_axis(row, col, line_size)
+			self.draw_rect(line_size, COLOR_BLUE, x, y)
 
 	def draw_exit(self, line_size):
 		row, col = self.exit
@@ -69,7 +76,8 @@ class MazeCanvas():
 			cells_row = maze[row]
 			for col in range(len(cells_row)):
 				cell = cells_row[col]
-				# self.draw_label()
 				self.draw_cell(cell, row, col, line_size)
+				self.draw_label(cell, row, col, line_size)
 
-		pygame.display.flip()
+		pygame.display.update()
+		clock.tick(10)
