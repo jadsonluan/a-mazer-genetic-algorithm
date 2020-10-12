@@ -5,4 +5,4 @@ from .ag import Ag
 from .population import Population
 
 
-__all__ = ['Maze', 'Cell', 'Direction']
+__all__ = ['Maze', 'Cell', 'Direction', 'Ag', 'Population']
