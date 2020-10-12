@@ -18,7 +18,7 @@ class Population:
 
   def get_fitness(self):
     result = []
-    for i in self.population_sorted():
+    for i in self.chromosomes:
       result.append(i.fitness)
     return sorted(result)
     
@@ -39,17 +39,18 @@ class Population:
   def generate_population(self):
     #tamanho da população deve ser par
     result = []
+    parent_with_weight = choices(self.chromosomes, weights=self.get_fitness(), k=len(self.chromosomes))
     for i in range(0, len(self.chromosomes), 2):
-      self.crossover(i, result)
+      self.crossover(i, result, parent_with_weight)
     
     # setando a nova população
     self.chromosomes = result
     self.find_result = False
     return result
 
-  def crossover(self, i, result):
-    parent1 = self.chromosomes[i].directions
-    parent2 = self.chromosomes[i+1].directions
+  def crossover(self, i, result, parent_with_weight):
+    parent1 = parent_with_weight[i].directions
+    parent2 = parent_with_weight[i+1].directions
     # criando dois novos filhos
     child1 = Chromosome(self.change_half(parent1, parent2), self.initial_fitness)
     child2 = Chromosome(self.change_half(parent2, parent1), self.initial_fitness)
