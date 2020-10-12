@@ -6,4 +6,4 @@ from .population import Population
 from .canvas import MazeCanvas
 
 
-__all__ = ['Maze', 'Cell', 'Direction', 'MazeCanvas']
+__all__ = ['Maze', 'Cell', 'Direction', 'Ag', 'Population', 'MazeCanvas']

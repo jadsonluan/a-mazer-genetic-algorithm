@@ -1,5 +1,6 @@
 # coding: utf-8
 from amazer import Maze, Cell, Direction, Ag, MazeCanvas
+from plot import FitnessPlot, PlotModel
 
 DOOR = 1
 WALL = 0
@@ -77,5 +78,12 @@ print('entrance', maze.entrance)
 print('exit', maze.exit)
 print("RESOLVENDO O LABIRINTO")
 # paramêtros ==> Ag(labirinto, tamanho inicial do cromossomo, tamanho da população, número máximo de gerações, número de elementos a sofrer mutação)
-resolution = Ag(maze, 20, 100, 20, 10)
-# print(resolution.all_fitness)
+resolution = Ag(maze, 20, 100, 30, 10)
+
+# geração do gráfico a partir dos fitnesses
+fitness_plot = FitnessPlot(resolution.all_fitness)
+fitness_plot.plot(PlotModel.MEDIAN)
+
+if len(resolution.all_solutions):
+  while True:
+    maze.display()

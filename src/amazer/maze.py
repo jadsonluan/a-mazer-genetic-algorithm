@@ -105,7 +105,6 @@ class Maze:
       return False
       
     element.label = label
-    # self.display(label_only=True)
     print()
 
     # Se o target_label não for None, então estamos procurando uma label especifica encostada
