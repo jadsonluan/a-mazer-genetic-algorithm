@@ -2,7 +2,6 @@
 from amazer import Maze, Cell, Direction, Ag, MazeCanvas
 from plot import FitnessPlot, PlotModel
 
-# test_no_doors_entrance_exit_maze()
 maze = Maze(10)
 
 print('entrance', maze.entrance)
@@ -18,14 +17,12 @@ fitness_plot.plot(PlotModel.MEDIAN)
 
 best_solution = None
 
+# encontrando a melhor solução descoberta pelo algoritmo
 for solution in resolution.all_solutions:
   if best_solution is None or len(best_solution) > len(solution):
     best_solution = solution
 
+# exibindo melhor solução
 if best_solution is not None:
   print(best_solution)
   maze.draw_solution(best_solution)
-
-# if len(resolution.all_solutions):
-#   while True:
-#     maze.display()
