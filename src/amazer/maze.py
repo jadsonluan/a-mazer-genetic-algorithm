@@ -1,11 +1,12 @@
 from random import choice
 from .cell import Cell
 from .directions import Direction, opposite, get_adjacent
+from .canvas import MazeCanvas
+from .labels import Label
 
 WALL = 0
 DOOR = 1
 
-DEFAULT_LABEL = "🔥"
 EMPTY_POSITION = (-1,-1)
 
 class Maze:
@@ -15,13 +16,14 @@ class Maze:
     self.entrance = (choice(range(size)), 0)
     self.exit = (choice(range(size)), size - 1)
     self.init()
+    self.canvas = MazeCanvas(self.entrance, self.exit)
 
   def create_maze(self, size):
     maze = []
     for row in range(self.size):
       maze.append([])
       for col in range(self.size):
-        maze[row].append(Cell(WALL, WALL, WALL, WALL, DEFAULT_LABEL))
+        maze[row].append(Cell(WALL, WALL, WALL, WALL, Label.DEFAULT))
     return maze
 
   def is_boundary_cell(self, position):
@@ -36,6 +38,7 @@ class Maze:
     label_entrance = 1
     label_exit = 2
     self.make_solvable(1, 2)
+    self.clear_labels()
     
   def make_solvable(self, label_entrance, label_exit):
     solved = False
@@ -59,17 +62,17 @@ class Maze:
 
       if break_random_wall_from_entrance:
         print("[🌊] Iniciando FloodFill (Entrada => Espaço vazio)!")
-        self.floodfill(self.entrance, self.exit, label_entrance, target_label=DEFAULT_LABEL)
+        self.floodfill(self.entrance, self.exit, label_entrance, target_label=Label.DEFAULT)
       else:
         print("[🌊] Iniciando FloodFill (Saída => Espaço vazio)!")
-        self.floodfill(self.exit, self.entrance, label_exit, target_label=DEFAULT_LABEL)
+        self.floodfill(self.exit, self.entrance, label_exit, target_label=Label.DEFAULT)
       break_random_wall_from_entrance = not break_random_wall_from_entrance
     print("[✅] Saída encontrada! O labirinto possui solução.")
 
   def clear_labels(self):
     for row in range(self.size):
       for col in range(self.size):
-        self.cell((row, col)).label = DEFAULT_LABEL
+        self.cell((row, col)).label = Label.DEFAULT
         
   def cell(self, position):
     row, col = position
@@ -103,7 +106,6 @@ class Maze:
       return False
       
     element.label = label
-    self.display(label_only=True)
     print()
 
     # Se o target_label não for None, então estamos procurando uma label especifica encostada
@@ -167,14 +169,31 @@ class Maze:
     directions = [Direction.RIGHT, Direction.LEFT, Direction.TOP, Direction.BOTTOM]
 
     for direction in directions:
-      create_door = choice([True,False,False])
+      create_door = choice([True, False, False])
       is_boundary_wall = self.is_boundary_wall(position, direction)
 
       if create_door and not is_boundary_wall and self.has_neighbor(position, direction):
         self.create_door(position, direction)
+  
+  def draw_solution(self, solution):
+    current_cell = self.entrance
+    for step in solution:
+      next_cell = None
+      current_cell_value = self.maze[current_cell[0]][current_cell[1]]
+      if step == Direction.RIGHT.value and current_cell_value.right != WALL:
+        next_cell = (current_cell[0], current_cell[1] + 1)
+      elif step == Direction.LEFT.value and current_cell_value.left != WALL:
+        next_cell = (current_cell[0], current_cell[1] - 1)
+      elif step == Direction.BOTTOM.value and current_cell_value.bottom != WALL:
+        next_cell = (current_cell[0] + 1, current_cell[1])
+      elif step == Direction.TOP.value and current_cell_value.top != WALL:
+        next_cell = (current_cell[0] - 1, current_cell[1])
+      
+      if next_cell:
+        self.maze[next_cell[0]][next_cell[1]].label = Label.MOVEMENT
+        current_cell = next_cell
+      
+      self.display()
 
-  def display(self, label_only=False):
-    for row in range(self.size):
-      for col in range(self.size):
-        print(self.maze[row][col] if not label_only else self.cell((row,col)).label, end=" ")
-      print()
+  def display(self):
+    self.canvas.draw(self.maze)
