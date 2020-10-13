@@ -20,7 +20,7 @@ class FitnessPlot:
   If model is "MEAN", it returns the mean of the popoulation fitnesses.
   If model is "MEDIAN", it returns the median of the popoulation fitnesses.
   """
-  def get_fitnesses_statistical_value(self, model):
+  def calculate_population_fitnesses(self, model):
     results = []
     calc_function = None
     if model == PlotModel.MEAN:
@@ -40,7 +40,7 @@ class FitnessPlot:
   Generates a graph of a-maze solver generations vs. population fitness
   """
   def plot(self, model):
-    fitnesses = self.get_fitnesses_statistical_value(model)
+    fitnesses = self.calculate_population_fitnesses(model)
     generations = range(1, len(fitnesses) + 1)
 
     data_dict = {"generations": generations, "fitnesses": fitnesses}
