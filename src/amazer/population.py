@@ -37,10 +37,20 @@ class Population:
     return result
 
   def generate_population(self):
-    #tamanho da população deve ser par
+    
     result = []
     parent_with_weight = choices(self.chromosomes, weights=self.get_fitness(), k=len(self.chromosomes))
-    for i in range(0, len(self.chromosomes), 2):
+    index = len(self.chromosomes)
+
+    #caso o tamanho da população seja ímpar
+    if(len(self.chromosomes)/2) != 0:
+      index -= 1
+      parent1 = parent_with_weight[choice(range(len(self.chromosomes)))].directions
+      parent2 = parent_with_weight[choice(range(len(self.chromosomes)))].directions
+      child = Chromosome(self.change_half(parent1, parent2), self.initial_fitness)
+      result.append(child)
+
+    for i in range(0, index, 2):
       self.crossover(i, result, parent_with_weight)
     
     # setando a nova população
