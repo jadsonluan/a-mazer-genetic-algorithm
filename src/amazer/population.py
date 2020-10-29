@@ -45,10 +45,7 @@ class Population:
     #caso o tamanho da população seja ímpar
     if(len(self.chromosomes)/2) != 0:
       index -= 1
-      parent1 = parent_with_weight[choice(range(len(self.chromosomes)))].directions
-      parent2 = parent_with_weight[choice(range(len(self.chromosomes)))].directions
-      child = Chromosome(self.change_half(parent1, parent2), self.initial_fitness)
-      result.append(child)
+      self.odd_children(parent_with_weight, result)
 
     for i in range(0, index, 2):
       self.crossover(i, result, parent_with_weight)
@@ -57,6 +54,12 @@ class Population:
     self.chromosomes = result
     self.find_result = False
     return result
+
+  def odd_children(self, parent_with_weight, result):
+    parent1 = parent_with_weight[choice(range(len(self.chromosomes)))].directions
+    parent2 = parent_with_weight[choice(range(len(self.chromosomes)))].directions
+    child = Chromosome(self.change_half(parent1, parent2), self.initial_fitness)
+    result.append(child)
 
   def crossover(self, i, result, parent_with_weight):
     parent1 = parent_with_weight[i].directions
