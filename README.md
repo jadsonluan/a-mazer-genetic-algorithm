@@ -4,6 +4,8 @@ A maze solver using Genetic Algorithm.
 
 Reference: <https://research.ijcaonline.org/volume58/number17/pxc3883886.pdf>
 
+Video running the example: <https://www.youtube.com/watch?v=Hl6HuZZuT2A>
+
 ## Running
 
 First of all, make sure you have Python with version at least 3.5 installed. Then, you'll need to install these dependencies:
